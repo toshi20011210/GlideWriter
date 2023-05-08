@@ -5,7 +5,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
-
 import re
 import requests
 import urllib.request, urllib.error
@@ -13,20 +12,11 @@ import time
 
 driver = webdriver.Chrome('./chromedriver')
 
-#required input 
-
-#name
-#date
-#probability 
-#image
-#averageMY
-
-driver.get('https://kitaichi.glideapp.io/dl/d8fc49')
+driver.get('https://example.glideapp.io/')
 time.sleep(2)
 driver.execute_script("window.open()")
 
-
-for counter in range(4174, 4366):
+for counter in range(0000, 4366):
     driver.switch_to.window(driver.window_handles[1])
     
     driver.get('https://p-town.dmm.com/machines/'+str(counter))
@@ -74,28 +64,12 @@ for counter in range(4174, 4366):
         #averageMY 
         paragraphsArray = []
         tempString = ''
-        #---------------
-        #divs = driver.find_elements(By.CLASS_NAME, 'wysiwyg-box')
-        #for i in range(0, len(divs)):
-        #    try:
-        #        #if divs[i].find_element(By.CSS_SELECTOR, '.title _ellipsis').text.__contains__('初当り1回あたりの期待出玉'):
-        #        #    print('gotit')
-        #        #print(title)
-        #        paragraphs = divs[i].find_elements(By.TAG_NAME, 'p')
-        #        for j in range(0, len(paragraphs)):
-        #            if paragraphs[j].text.__contains__('初当り1回あたりの期待出玉'):
-        #                paragraphsArray = re.split('玉|\n', paragraphs[j].text)
-        #                print('found it!!!!!!')
-        #                print(paragraphsArray[0])
-        #    except NoSuchElementException:
-        #        nothing = 'nothing'
-        #-----rewrite-----
         elements = driver.find_elements(By.TAG_NAME, 'p')
-        for i in range (0, len(elements)):
+        for i in range(0, len(elements)):
             if elements[i].text == '初当り1回あたりの期待出玉':
                 box = elements[i].find_element(By.XPATH, '../..')
                 tempArray = box.find_elements(By.TAG_NAME, 'p')
-                for j in range (0, len(tempArray)):
+                for j in range(0, len(tempArray)):
                     tempString = tempArray[j].text.replace('約', '')
                     paragraphsArray = re.split('玉|\n|個', tempString)
         paragraphsArray.append('default')
@@ -107,44 +81,20 @@ for counter in range(4174, 4366):
             with open('skipped.txt', 'a') as f:
                 f.write(str(counter) + ' ' + nameArray[0] + '\n')
         else:
-            #driver.quit()
             driver.switch_to.window(driver.window_handles[0])
             time.sleep(10)
-            #clickable = 0
-            #while clickable == 0: 
-            #    time.sleep(2)
-            #    try:
-            #        driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div[1]/div[3]/div/div[2]/div[2]/button').click()
-            #        clickable = 1
-            #    except NoSuchElementException: 
-            #        clickable = 0
             driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div[1]/div[3]/div/div[2]/div[2]/button').click()
             time.sleep(2)
-            #wait = WebDriverWait(driver, 60)
-            #wait.until(expected_conditions.element_to_be_clickable((By.XPATH, '//*[@id="app-root"]/div[2]/div[1]/div[3]/div/div[2]/div[2]/button')))
             driver.find_element(By.XPATH, '//*[@id="screenScrollViewcab5cac14100c76b106d35067a77c24e"]/div/div[1]/div[2]/div/div/textarea').send_keys(nameArray[0])
             driver.find_element(By.XPATH, '//*[@id="screenScrollViewcab5cac14100c76b106d35067a77c24e"]/div/div[2]/div[2]/div/input').send_keys(paragraphsArray[0])
             driver.find_element(By.XPATH, '//*[@id="screenScrollViewcab5cac14100c76b106d35067a77c24e"]/div/div[3]/div[2]/div/input').send_keys(probabilityArray[1])
             driver.find_element(By.XPATH, '//*[@id="screenScrollViewcab5cac14100c76b106d35067a77c24e"]/div/div[5]/div[2]/div/div/textarea').send_keys(dateArray[0])
             driver.find_element(By.XPATH, '//*[@id="screenScrollViewcab5cac14100c76b106d35067a77c24e"]/div/div[6]/label/div[2]/label/input').send_keys('/Users/toshiakitakahashi/Downloads/machine.png')
-            #time.sleep(2)
-            #wait2 = WebDriverWait(driver, 60)
-            #wait2.until(expected_conditions.element_to_be_clickable((By.XPATH, '//*[@id="app-root"]/div[2]/div[1]/div[3]/div/div[2]/div[2]/button')))
-            #time.sleep(2)
             #let the image upload
             time.sleep(20)
-            #clickable2 = 0
-            #while clickable2 == 0: 
-            #    time.sleep(2)
-            #    try:
-            #        driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div[1]/div[3]/div/div[2]/div[2]/button').click()
-            #        clickable2 = 1
-            #    except NoSuchElementException: 
-            #        clickable2 = 0
             driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div[1]/div[3]/div/div[2]/div[2]/button').click()
             time.sleep(5)
             driver.switch_to.window(driver.window_handles[1])
-            #driver.quit()
 
     except NoSuchElementException:
         nameArray.append('')
